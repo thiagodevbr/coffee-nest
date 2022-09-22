@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDTO } from './dtos/create-coffee-dto';
@@ -22,30 +21,33 @@ export class CoffeesController {
   constructor(private readonly coffeeService: CoffeesService) {}
 
   @Get()
-  getAllCoffees(): Coffee[] {
-    return this.coffeeService.findAll();
+  async getAllCoffees(): Promise<Coffee[]> {
+    return await this.coffeeService.findAll();
   }
 
   @Get(':id')
-  getOneCoffee(@Param() { id }: IResquest): Coffee {
-    return this.coffeeService.findOne(id);
+  async getOneCoffee(@Param() { id }: IResquest): Promise<Coffee> {
+    return await this.coffeeService.findOne(id);
   }
 
   @Post()
-  create(@Body() body: CreateCoffeeDTO): Coffee {
-    const coffee = this.coffeeService.create(body);
+  async create(@Body() body: CreateCoffeeDTO): Promise<Coffee> {
+    const coffee = await this.coffeeService.create(body);
     return coffee;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateCoffeDTO): Coffee {
-    const coffee = this.coffeeService.update(id, body);
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdateCoffeDTO,
+  ): Promise<Coffee> {
+    const coffee = await this.coffeeService.update(id, body);
     return coffee;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.coffeeService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.coffeeService.remove(id);
     return `this action deletes ${id} coffee`;
   }
 }
